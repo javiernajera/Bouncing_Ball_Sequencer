@@ -11,6 +11,7 @@ int x2; // realtime ending x
 int y2; //realtime ending y
 boolean clicked = false;
 boolean released = false;
+
 void setup() {
   size(640,640);
   happyBalls = new BallLauncher(new PVector(0, 0));
@@ -154,6 +155,7 @@ class Ball{
     // Add gravity to velocity
     velocity.add(gravity);
     
+    float intermed;
     // bounce off custom lines
     for (int i = 0; i<surfaces.getSize(); i++) {
       float x1 = surfaces.getLine(i).startX;
@@ -161,7 +163,55 @@ class Ball{
       float x2 = surfaces.getLine(i).endX;
       float y2 = surfaces.getLine(i).endY;
       
-      if (location.x + 38 > 
+      float m_val = (y2-y1)/(x2-x1);
+      float b_val = y1 - m_val*x1;
+      
+      float cir_rightX = location.x + 38;
+      float cir_rightY = location.y;
+      float cir_leftX = location.x - 38;
+      float cir_leftY = location.y;
+      float cir_topX = location.x;
+      float cir_topY = location.y + 38;
+      float cir_botX = location.x;
+      float cir_botY = location.y - 38;
+ 
+      intermed = cir_rightX * m_val + b_val;
+      if ((abs(intermed - cir_rightY) <= 2)){
+        if (((cir_rightX <= x1) && (cir_rightX >= x2)) || ((cir_rightX <= x2) && (cir_rightX >= x1))) {
+          // intersect
+          println("intersect!");
+          velocity.x *= -1;
+          velocity.y *= -1;
+        }
+      }
+      intermed = cir_leftX * m_val + b_val;
+      if ((abs(intermed - cir_leftY) <= 2)){
+        if (((cir_leftX <= x1) && (cir_leftX >= x2)) || ((cir_leftX <= x2) && (cir_leftX >= x1))) {
+          // intersect
+          println("intersect!");
+          velocity.x *= -1;
+          velocity.y *= -1;
+        }
+      }
+      intermed = cir_topX * m_val + b_val;
+      if ((abs(intermed - cir_topY) <= 2)){
+        if (((cir_topX <= x1) && (cir_topX >= x2)) || ((cir_topX <= x2) && (cir_topX >= x1))) {
+          // intersect
+          println("intersect!");
+          velocity.x *= -1;
+          velocity.y *= -1;
+        }
+      }
+      intermed = cir_botX * m_val + b_val;
+      if ((abs(intermed - cir_botY) <= 2)){
+        if (((cir_botX <= x1) && (cir_botX >= x2)) || ((cir_botX <= x2) && (cir_botX >= x1))) {
+          // intersect
+          println("intersect!");
+          velocity.x *= -1;
+          velocity.y *= -1;
+        }
+      }
+      
     }
     
     // Bounce off edges
