@@ -1,6 +1,6 @@
 //this is from processing example
 
- // Gravity acts at the shape's acceleration
+// Gravity acts at the shape's acceleration
 BallLauncher happyBalls;
 int freq;
 int count;
@@ -16,11 +16,10 @@ void setup() {
   happyBalls = new BallLauncher(new PVector(0, 0));
   freq = 50;
   count = 50;
-  
 }
 
 void draw() {
-  background(0);                            //this sets the screen to black for every frame
+  background(0);                               //this sets the screen to black for every frame
   
   
   if (mousePressed == true && !clicked) {      //if mouse is pressed record the coordinates
@@ -39,8 +38,6 @@ void draw() {
   }
   stroke(255);
   surfaces.printLines();                    //function reprints the surfaces
-  
-  //surfaces.printLines();
   
   if(count == freq){
     happyBalls.addBall();
@@ -77,16 +74,15 @@ class BallLauncher{
       else{
         b.run();
       }
-      System.out.println(balls.size());
+      // System.out.println(balls.size());
       
     }
   }
 }
 
-
 class Lines{
   ArrayList<Surface> ourLines = new ArrayList<Surface>();    // Data Structure that collects lines that are being drawn
-  
+ 
   Lines(){}
   
   void printLines(){                            // prints all surface objects stored in the arraylist
@@ -99,12 +95,18 @@ class Lines{
       }
     }
   }
+    
+  int getSize(){
+    return ourLines.size();
+  }
+  
+  Surface getLine(int i){
+    return ourLines.get(i);
+  }
   
   void addLine(int x1, int y1, int x2, int y2){        // adds line to the array list
     ourLines.add(new Surface(x1, y1, x2, y2));
   }
-  
-  
 }
 
 class Surface{                                        // literally just an object that represents a line
@@ -151,6 +153,16 @@ class Ball{
     location.add(velocity);
     // Add gravity to velocity
     velocity.add(gravity);
+    
+    // bounce off custom lines
+    for (int i = 0; i<surfaces.getSize(); i++) {
+      float x1 = surfaces.getLine(i).startX;
+      float y1 = surfaces.getLine(i).startY;
+      float x2 = surfaces.getLine(i).endX;
+      float y2 = surfaces.getLine(i).endY;
+      
+      if (location.x + 38 > 
+    }
     
     // Bounce off edges
     if ((location.x > width+38) || (location.x < 0)) {
