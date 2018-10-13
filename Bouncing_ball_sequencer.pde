@@ -5,10 +5,10 @@ BallLauncher happyBalls;
 int freq;
 int count;
 Lines surfaces = new Lines();
-int x1;
-int y1;
-int x2;
-int y2;
+int x1; // realtime starting x
+int y1; // realtime starting y
+int x2; // realtime ending x
+int y2; //realtime ending y
 boolean clicked = false;
 boolean released = false;
 void setup() {
@@ -20,25 +20,25 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(0);                            //this sets the screen to black for every frame
   
   
-  if (mousePressed == true && !clicked) {
+  if (mousePressed == true && !clicked) {      //if mouse is pressed record the coordinates
     x1 = mouseX;
     y1 = mouseY;
     clicked = true;
     released = false;
   }
   
-  if(mousePressed == false && !released){
+  if(mousePressed == false && !released){    //when it is released record those coordinates
     x2 = mouseX;
     y2 = mouseY;
     clicked = false;
     released = true;
-    surfaces.addLine(x1, y1, x2, y2);
+    surfaces.addLine(x1, y1, x2, y2);        //add line to surfaces arraylist
   }
   stroke(255);
-  surfaces.printLines();
+  surfaces.printLines();                    //function reprints the surfaces
   
   //surfaces.printLines();
   
@@ -54,13 +54,6 @@ void draw() {
   }
 }
 
-/*
-class LineSaver{
-  ArrayList<Line> lines; 
-  
-  
-}
-*/
 
 class BallLauncher{
   ArrayList<Ball> balls;
@@ -89,12 +82,14 @@ class BallLauncher{
     }
   }
 }
+
+
 class Lines{
-  ArrayList<Surface> ourLines = new ArrayList<Surface>();
+  ArrayList<Surface> ourLines = new ArrayList<Surface>();    // Data Structure that collects lines that are being drawn
   
   Lines(){}
   
-  void printLines(){
+  void printLines(){                            // prints all surface objects stored in the arraylist
     Surface l;
     if(ourLines.size() > 0){
       for(int i = 0; i < ourLines.size(); i++){
@@ -105,20 +100,20 @@ class Lines{
     }
   }
   
-  void addLine(int x1, int y1, int x2, int y2){
+  void addLine(int x1, int y1, int x2, int y2){        // adds line to the array list
     ourLines.add(new Surface(x1, y1, x2, y2));
   }
   
   
 }
 
-class Surface{
+class Surface{                                        // literally just an object that represents a line
   int startX;
   int startY;
   int endX;
   int endY;
   
-  Surface(int x1, int y1, int x2, int y2){
+  Surface(int x1, int y1, int x2, int y2){          // the coordinates of the line
     startX = x1;
     startY = y1;
     endX = x2;
