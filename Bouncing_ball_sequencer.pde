@@ -154,7 +154,10 @@ class Ball {
     // Add gravity to velocity
     velocity.add(gravity);
 
-    float intermed;
+    float right_y_check;
+    float left_y_check;
+    float top_y_check;
+    float bot_y_check;
     // bounce off custom lines
     for (int i = 0; i<surfaces.getSize(); i++) {
       float x1 = surfaces.getLine(i).startX;
@@ -174,59 +177,69 @@ class Ball {
       float cir_botX = location.x;
       float cir_botY = location.y - 38;
 
-      intermed = cir_rightX * m_val + b_val;
-      if ((abs(intermed - cir_rightY) <= 3)) {
+      right_y_check = cir_rightX * m_val + b_val;
+      left_y_check = cir_leftX * m_val + b_val;
+      top_y_check = cir_topX * m_val + b_val;
+      bot_y_check = cir_botX * m_val + b_val;
+      
+      float right_y_dist = abs(right_y_check - cir_rightY);
+      float left_y_dist = abs(left_y_check - cir_leftY);
+      float top_y_dist = abs(top_y_check - cir_topY);
+      float bot_y_dist = abs(bot_y_check - cir_botY);
+      
+      int 
+      if ((abs(right_y_check - cir_rightY) <= 2)) {
         if (((cir_rightX <= x1) && (cir_rightX >= x2)) || ((cir_rightX <= x2) && (cir_rightX >= x1))) {
           // right intersect
           println("right intersect!");
-          float angle = atan2(intermed, cir_rightX);
+          float angle = atan2(right_y_check, cir_rightX);
           float targetX = location.x + cos(angle)*38;
           float targetY = location.y + sin(angle)*38;
           float ax = (targetX - cir_rightX)*.05;
-          float ay = (targetY - intermed)*.05;
+          float ay = (targetY - right_y_check)*.05;
           velocity.x *= -1*(ax+.05);
           velocity.y *= -1*(ay+.05);
         }
       }
       
-      intermed = cir_leftX * m_val + b_val;
-      if ((abs(intermed - cir_leftY) <= 3)) {
+      
+      if ((abs(left_y_check - cir_leftY) <= 2)) {
         if (((cir_leftX <= x1) && (cir_leftX >= x2)) || ((cir_leftX <= x2) && (cir_leftX >= x1))) {
           // left intersect
           println("left intersect!");
-          float angle = atan2(intermed, cir_leftX);
+          float angle = atan2(left_y_check, cir_leftX);
           float targetX = location.x + cos(angle)*38;
           float targetY = location.y + sin(angle)*38;
           float ax = (targetX - cir_leftX)*.05;
-          float ay = (targetY - intermed)*.05;
+          float ay = (targetY - left_y_check)*.05;
           velocity.x *= -1*(ax+.05);
           velocity.y *= -1*(ay+.05);
         }
       }
-      intermed = cir_topX * m_val + b_val;
-      if ((abs(intermed - cir_topY) <= 3)) {
+      
+      if ((abs(top_y_check - cir_topY) <= 2)) {
         if (((cir_topX <= x1) && (cir_topX >= x2)) || ((cir_topX <= x2) && (cir_topX >= x1))) {
           // top intersect
           println("top intersect!");
-          float angle = atan2(intermed, cir_topX);
+          float angle = atan2(top_y_check, cir_topX);
           float targetX = location.x + cos(angle)*38;
           float targetY = location.y + sin(angle)*38;
           float ax = (targetX - cir_topX)*.05;
-          float ay = (targetY - intermed)*.05;
+          float ay = (targetY - top_y_check)*.05;
           velocity.x *= -1*(ax+.05);
           velocity.y *= -1*(ay+.05);
         }
       }
-      intermed = cir_botX * m_val + b_val;
-      if ((abs(intermed - cir_botY) <= 3)) {
+      
+      if ((abs(bot_y_check - cir_botY) <= 2)) {
         if (((cir_botX <= x1) && (cir_botX >= x2)) || ((cir_botX <= x2) && (cir_botX >= x1))) {
           // bottom intersect
           println("bottom intersect!");
-          float angle = atan2(intermed, cir_botX);
+          float angle = atan2(bot_y_check, cir_botX);
           float targetX = location.x + cos(angle)*38;
           float targetY = location.y + sin(angle)*38;
           float ax = (targetX - cir_botX)*.05;
-          float ay = (targetY - intermed)*.05;
+          float ay = (targetY - bot_y_check)*.05;
           velocity.x *= -1*(ax+.05);
           velocity.y *= -1*(ay+.05);
         }
