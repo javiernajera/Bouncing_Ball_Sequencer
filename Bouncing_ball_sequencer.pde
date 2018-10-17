@@ -11,6 +11,9 @@ int x2; // realtime ending x
 int y2; //realtime ending y
 boolean clicked = false;
 boolean released = false;
+PVector[] coords;
+PVector[] all_lines;
+int curr_line = 0;
 
 void setup() {
   size(640, 640);
@@ -36,6 +39,19 @@ void draw() {
     clicked = false;
     released = true;
     surfaces.addLine(x1, y1, x2, y2);        //add line to surfaces arraylist
+    PVector first = new PVector(x1,y1);
+    PVector second = new PVector(x2,y2);
+    float base_length = PVector.dist(first,second);
+    
+    coords = new PVector[ceil(base_length)];
+    
+    for (int i=0;i<coords.length;i++) {
+      coords[i] = new PVector();
+      coords[i].x = first.x + ((second.x-first.x)/base_length)*i;
+      coords[i].y = first.y + ((second.y-first.y)/base_length)*i;
+    }
+    
+    curr_line += 1;
   }
   stroke(255);
   surfaces.printLines();                    //function reprints the surfaces
@@ -46,10 +62,6 @@ void draw() {
   }
   happyBalls.run();
   count++;
-
-  if (frameCount % 60 == 0) {
-    println("fps: " + frameRate);
-  }
 }
 
 
@@ -106,6 +118,7 @@ class Lines {
 
   void addLine(int x1, int y1, int x2, int y2) {        // adds line to the array list
     ourLines.add(new Surface(x1, y1, x2, y2));
+    
   }
 }
 
@@ -153,7 +166,32 @@ class Ball {
     location.add(velocity);
     // Add gravity to velocity
     velocity.add(gravity);
-
+    
+    
+    PVector incidence = PVector.mult(velocity, -1);
+    incidence.normalize();
+    
+    for (int i=0; i<surfaces.getSize(); i++) {
+      for (int j=0; j<coords.length; j++) { 
+        if (PVector.dist(location, coords[i]) < 38) {
+          PVector first = new PVector(surfaces.getLine(i).startX, surfaces.getLine(i).startY);
+          PVector second = new PVector(surfaces.getLine(i).endX, surfaces.getLine(i).endY);
+          
+          
+          PVector baseDelta = PVector.sub(second,first);
+          baseDelta.normalize();
+          PVector normal = new PVector(-baseDelta.y, baseDelta.x);
+          
+          float dot = incidence.dot(normal);
+          velocity.set(2*normal.x*dot - incidence.x, 2*normal.y*dot - incidence.y, 0);
+          velocity.mult(3);
+          
+          
+        }
+      }
+    }
+    /*
+    
     float right_y_check;
     float left_y_check;
     float top_y_check;
@@ -177,18 +215,53 @@ class Ball {
       float cir_botX = location.x;
       float cir_botY = location.y - 38;
 
-      right_y_check = cir_rightX * m_val + b_val;
+      right_y_check = location.x*m_val + b_val;
+      //right_y_check = cir_rightX * m_val + b_val;
       left_y_check = cir_leftX * m_val + b_val;
       top_y_check = cir_topX * m_val + b_val;
       bot_y_check = cir_botX * m_val + b_val;
       
-      float right_y_dist = abs(right_y_check - cir_rightY);
+      //float right_y_dist = abs(right_y_check - cir_rightY);
+      float right_y_dist = abs(right_y_check - location.y);
       float left_y_dist = abs(left_y_check - cir_leftY);
       float top_y_dist = abs(top_y_check - cir_topY);
       float bot_y_dist = abs(bot_y_check - cir_botY);
       
-      int 
-      if ((abs(right_y_check - cir_rightY) <= 2)) {
+      int RIGHT = 1;
+      int LEFT = 2;
+      int TOP = 3;
+      int BOT = 4;
+      // float closest = min(right_y_dist,left_y_dist,top_y_dist);
+      // closest = min(closest,bot_y_dist);
+      //int go_to = 0;
+      if (right_y_dist <= 1) {
+        println("intersect");
+        velocity.x *= -1;
+        
+      }
+      
+      if (right_y_dist == closest) {
+        if (right_y_dist <= 2) {
+          go_to = RIGHT;
+        }
+      }
+      else if (left_y_dist == closest) {
+        if (left_y_dist <= 2) {
+          go_to = LEFT;
+        }
+      }
+      else if (top_y_dist == closest) {
+        if (top_y_dist <= 2) {
+          go_to = TOP;
+        }
+      }
+      else {
+        if (bot_y_dist <=2) {
+          go_to = BOT;
+        }
+      }
+      
+      if (go_to == RIGHT) {
         if (((cir_rightX <= x1) && (cir_rightX >= x2)) || ((cir_rightX <= x2) && (cir_rightX >= x1))) {
           // right intersect
           println("right intersect!");
@@ -203,7 +276,7 @@ class Ball {
       }
       
       
-      if ((abs(left_y_check - cir_leftY) <= 2)) {
+      if (go_to == LEFT) {
         if (((cir_leftX <= x1) && (cir_leftX >= x2)) || ((cir_leftX <= x2) && (cir_leftX >= x1))) {
           // left intersect
           println("left intersect!");
@@ -217,7 +290,7 @@ class Ball {
         }
       }
       
-      if ((abs(top_y_check - cir_topY) <= 2)) {
+      if (go_to == TOP) {
         if (((cir_topX <= x1) && (cir_topX >= x2)) || ((cir_topX <= x2) && (cir_topX >= x1))) {
           // top intersect
           println("top intersect!");
@@ -231,7 +304,7 @@ class Ball {
         }
       }
       
-      if ((abs(bot_y_check - cir_botY) <= 2)) {
+      if (go_to == BOT) {
         if (((cir_botX <= x1) && (cir_botX >= x2)) || ((cir_botX <= x2) && (cir_botX >= x1))) {
           // bottom intersect
           println("bottom intersect!");
@@ -244,8 +317,10 @@ class Ball {
           velocity.y *= -1*(ay+.05);
         }
       }
+      */
       
-    }
+    
+    
 
     // Remove the ball if it's off the screen
     if ((location.x > width+38) || (location.x < 0)) {
