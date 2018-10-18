@@ -17,7 +17,7 @@ int count;
 PVector position;
 PVector velocity;
 float r = 6;
-float speed = 3.5;
+float speed = 7;
 
 // current balls
 ArrayList<Ball> balls;
@@ -65,11 +65,11 @@ void draw() {
     PVector incidence = PVector.mult(velocity, -1);
     incidence.normalize();
     //println("coords length: " + coords.length);
-    println("position: " + position.x + " " + position.y);
+    //println("position: " + position.x + " " + position.y);
     for (int j=0;j<coords.length; j++) { 
       // check distance between ellipse and base top coordinates
       if (PVector.dist(position, coords[j]) < 38) {
-        println("hit base");
+        //println("hit base");
 
         // calculate dot product of incident vector and base top normal 
         float dot = incidence.dot(normal);
@@ -82,55 +82,13 @@ void draw() {
         // draw base top normal at collision point
         stroke(255, 128, 0);
         line(position.x, position.y, position.x-normal.x*100, position.y-normal.y*100);
+        
+        base1.y = random(height-100, height);
+        base2.y = random(height-100, height);
+        createGround();
       }
     }
   }
-  /*
-  // normalized incidence vector
-  //PVector incidence = PVector.mult(velocity, -1);
-  //incidence.normalize();
-
-  // detect and handle collision
-  for (int i=0; i<coords.length; i++) {
-    // check distance between ellipse and base top coordinates
-    if (PVector.dist(position, coords[i]) < r) {
-
-      // calculate dot product of incident vector and base top normal 
-      float dot = incidence.dot(normal);
-
-      // calculate reflection vector
-      // assign reflection vector to direction vector
-      velocity.set(2*normal.x*dot - incidence.x, 2*normal.y*dot - incidence.y, 0);
-      velocity.mult(speed);
-
-      // draw base top normal at collision point
-      stroke(255, 128, 0);
-      line(position.x, position.y, position.x-normal.x*100, position.y-normal.y*100);
-    }
-  }
-
-  
-  // detect boundary collision
-  // right
-  if (position.x > width-r) {
-    position.x = width-r;
-    velocity.x *= -1;
-  }
-  // left 
-  if (position.x < r) {
-    position.x = r;
-    velocity.x *= -1;
-  }
-  // top
-  if (position.y < r) {
-    position.y = r;
-    velocity.y *= -1;
-    // randomize base top
-    base1.y = random(height-100, height);
-    base2.y = random(height-100, height);
-    createGround();
-  }
-*/
 }
 
 class BallLauncher {
@@ -192,19 +150,22 @@ class Ball {
     if ((location.x > width+38) || (location.x < 0)) {
       offScreen = true;
     }
-
+  /*
     if (location.y > height) {
+      
       // We're reducing velocity ever so slightly 
       // when it hits the bottom of the window
       velocity.y = velocity.y * -0.95; 
       location.y = height;
-      
+    
       //randomize base top
       base1.y = random(height-100, height);
       base2.y = random(height-100, height);
       createGround();
     }
+    */
   }
+  
 }
 
 
