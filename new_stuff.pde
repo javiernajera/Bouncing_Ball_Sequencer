@@ -16,7 +16,7 @@ int count;
 // Variables related to moving ball
 PVector position;
 PVector velocity;
-float speed = 7;
+float speed = 9;
 
 // current balls
 ArrayList<Ball> balls;
