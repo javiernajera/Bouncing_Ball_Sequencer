@@ -16,7 +16,6 @@ int count;
 // Variables related to moving ball
 PVector position;
 PVector velocity;
-float r = 6;
 float speed = 7;
 
 // current balls
@@ -120,11 +119,13 @@ class Ball {
   PVector velocity;
   PVector gravity;
   boolean offScreen = false;
+  color rand_col;
   
   Ball(PVector loc) {
     location = loc.copy();
     velocity = new PVector(0,2.1);
-    gravity = new PVector(0,0.2);
+    gravity = new PVector(0,0.2);    
+    rand_col = color(random(255),random(255),random(255));
   }
   
   void run() { 
@@ -135,7 +136,7 @@ class Ball {
   void display() {
     stroke(255);
     strokeWeight(2);
-    fill(127);
+    fill(rand_col);
     ellipse(location.x,location.y,38,38);
   }
   
@@ -150,22 +151,7 @@ class Ball {
     if ((location.x > width+38) || (location.x < 0)) {
       offScreen = true;
     }
-  /*
-    if (location.y > height) {
-      
-      // We're reducing velocity ever so slightly 
-      // when it hits the bottom of the window
-      velocity.y = velocity.y * -0.95; 
-      location.y = height;
-    
-      //randomize base top
-      base1.y = random(height-100, height);
-      base2.y = random(height-100, height);
-      createGround();
-    }
-    */
   }
-  
 }
 
 
