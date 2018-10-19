@@ -4,7 +4,7 @@ PVector base1;
 PVector base2;
 // Length of floor
 float baseLength;
-
+boolean addBall;
 // An array of subpoints along the floor path
 PVector[] coords;
 
@@ -26,6 +26,7 @@ void setup() {
   happyBalls = new BallLauncher(new PVector(width/2,0));
   freq = 50;
   count = 50;
+  addBall = true;
   
   fill(128);
   base1 = new PVector(0, height-150);
@@ -45,19 +46,22 @@ void draw() {
 
 
   // draw ellipse
-  if (count == freq) {
+  if (mousePressed == true && addBall) {
+    addBall = false;
     happyBalls.addBall();
-    count = 0;
+  }
+  else if(mousePressed == false){
+    addBall = true;
   }
   happyBalls.run();
-  count++;
+  
   
   // calculate base top normal
   PVector baseDelta = PVector.sub(base2, base1);
   baseDelta.normalize();
   PVector normal = new PVector(-baseDelta.y, baseDelta.x);
   
-  for (int i=0; i< balls.size()-1; i++) {
+  for (int i=0; i< balls.size(); i++) {
     Ball b = balls.get(i);
     velocity = b.velocity;
     position = b.location;
