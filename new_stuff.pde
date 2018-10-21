@@ -1,40 +1,56 @@
+/*
+FILE: new_stuff
+AUTHORS: Karl Sarier and Javier Najera
+ASSIGNMENT: PQ4
+DESCRIPTION: On running this file, a window is generated
+               where the user can click anywhere on the screen 
+               to drop a ball of a randomly selected color. Whenever
+               a ball bounces off of the floor, the floor changes
+               its angle, resulting in unpredictable movement from the balls.
+KNOWN BUGS: When the new floor is larger than the previous floor, the ball will
+              sometimes glitch through the bottom of the screen. In other cases,
+              the ball gets stuck on the floor, and glitches across the screen.
+*/
+
 // Position of left hand side of floor
 PVector base1;
 // Position of right hand side of floor
 PVector base2;
+
 // Length of floor
 float baseLength;
-boolean addBall;
 // An array of subpoints along the floor path
 PVector[] coords;
 
-// ball stuff
+// keep track 
+boolean addBall;
 BallLauncher happyBalls;
-int freq;
-int count;
 
-// Variables related to moving ball
+// variables for each ball
 PVector position;
 PVector velocity;
 float speed = 9;
 
-// current balls
+// current balls on screen
 ArrayList<Ball> balls;
 
 void setup() {
   size(640, 640);
+  
+  // set the dropping point at the top-middle of the screen
   happyBalls = new BallLauncher(new PVector(width/2,0));
-  freq = 50;
-  count = 50;
   addBall = true;
   
   fill(128);
+  
+  // default ground
   base1 = new PVector(0, height-150);
   base2 = new PVector(width, height);
   createGround();
 }
 
 void draw() {
+  
   // draw background
   fill(0, 12);
   noStroke();
@@ -45,7 +61,7 @@ void draw() {
   quad(base1.x, base1.y, base2.x, base2.y, base2.x, height, 0, height);
 
 
-  // draw ellipse
+  // respond to mouse clicks
   if (mousePressed == true && addBall) {
     addBall = false;
     happyBalls.addBall();
@@ -61,23 +77,24 @@ void draw() {
   baseDelta.normalize();
   PVector normal = new PVector(-baseDelta.y, baseDelta.x);
   
+  // for each ball on the screen, locally save their velocity and position
   for (int i=0; i< balls.size(); i++) {
     Ball b = balls.get(i);
     velocity = b.velocity;
     position = b.location;
     PVector incidence = PVector.mult(velocity, -1);
     incidence.normalize();
-    //println("coords length: " + coords.length);
-    //println("position: " + position.x + " " + position.y);
+
+    // for every point on the base, check to see if the current ball intersects
     for (int j=0;j<coords.length; j++) { 
-      // check distance between ellipse and base top coordinates
+      
+      // check distance between the current circle and base top coordinates
       if (PVector.dist(position, coords[j]) < 38) {
-        //println("hit base");
 
         // calculate dot product of incident vector and base top normal 
         float dot = incidence.dot(normal);
 
-        // calculate reflection vector
+        // calculate reflection vector, then assign to direction vector
         // assign reflection vector to direction vector
         velocity.set(2*normal.x*dot - incidence.x, 2*normal.y*dot - incidence.y, 0);
         velocity.mult(speed);
@@ -86,6 +103,7 @@ void draw() {
         stroke(255, 128, 0);
         line(position.x, position.y, position.x-normal.x*100, position.y-normal.y*100);
         
+        // make a new base
         base1.y = random(height-100, height);
         base2.y = random(height-100, height);
         createGround();
@@ -94,7 +112,10 @@ void draw() {
   }
 }
 
+
+// a class to keep track of all the balls
 class BallLauncher {
+  
   PVector origin;
   
   BallLauncher(PVector position) {
@@ -106,6 +127,7 @@ class BallLauncher {
     balls.add(new Ball(origin));
   }
   
+  // check if a ball went off either side
   void run() {
     for (int i=balls.size()-1; i>=0; i--) {
       Ball b = balls.get(i);
@@ -118,6 +140,7 @@ class BallLauncher {
   }
 }
 
+// stores information about each ball
 class Ball {
   PVector location;
   PVector velocity;
@@ -145,22 +168,21 @@ class Ball {
   }
   
   void update() {
-    // Add velocity to the location.
+    
+    // Add velocity and gravity to the ball
     location.add(velocity);
-    // Add gravity to velocity
     velocity.add(gravity);
     
-
     // Remove the ball if it's off the screen
     if ((location.x > width+38) || (location.x < 0)) {
       offScreen = true;
-    }
+    } 
   }
 }
 
-
-// Calculate variables for the ground
+// get base top coordinates
 void createGround() {
+  
   // calculate length of base top
   baseLength = PVector.dist(base1, base2);
 
