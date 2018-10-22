@@ -177,11 +177,13 @@ class Ball {
   ArrayList<Surface> ourLines = surfaces.ourLines;
   PVector incidence;
   float speed = globalSpeed; 
+  color rand_color;
 
   Ball(PVector loc, int radius) {
     location = loc.copy();
     velocity = new PVector(1.6, 2.1);
     gravity = new PVector(0, 0.2);
+    rand_color = color(random(255),random(255),random(255));
     this.radius = radius;
   }
   
@@ -232,7 +234,7 @@ class Ball {
     // Display circle at location vector
     stroke(255);
     strokeWeight(2);
-    fill(127);
+    fill(rand_color);
     ellipse(location.x, location.y, radius, radius);
   }  
 
